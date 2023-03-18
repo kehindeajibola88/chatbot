@@ -31,9 +31,10 @@ const PORT = process.env.PORT || 8080;
 app.use(sessionMiddleware);
 io.engine.use(sessionMiddleware);
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
-});
+// app.get("/", (req, res) => {
+//   res.sendFile(path.join(__dirname, "public"));
+// });
+app.use(express.static(path.join(__dirname, "public")))
 
 const botResponse = require("./modules/botResponse");
 const SessionData = require("./modules/sessionData");

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resturant chatbot</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <nav>CHOPBETA</nav>
+    <main>
+      <section class="chat">
+        <header>Chatbot</header>
+        <ul id="messages">
+          <li class="chat-bot">Hello!, I am chatbot</li>
+        </ul>
+        <form id="form" action="">
+          <input id="input" type="text" /><button>Send</button>
+        </form>
+      </section>
+    </main>
+    <footer>
+      <a href="https://github.com/kehindeajibola88/Restaurant-Chatbot">Github Repo</a>
+    </footer>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+      var socket = io();
+
+      var messages = document.getElementById("messages");
+      var form = document.getElementById("form");
+      var input = document.getElementById("input");
+
+      const lineBreak = document.createElement("br");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        if (socket.connected) {
+          if (input.value) {
+            socket.emit("chat message", input.value);
+            input.value = "";
+          }
+        } else {
+          alert("Connection lost, please refresh the page.");
+        }
+      });
+
+      socket.on("chat message", function (msg) {
+        console.log(msg);
+        if (!msg || msg.message.length == 0) {
+          return;
+        }
+        let li = document.createElement("li");
+        li.innerText = msg.message;
+        if (msg.sender === "bot") {
+          li.classList.add("chat-bot");
+        } else {
+          li.classList.add("chat-user");
+        }
+
+        // msg.message.forEach((element) => {
+        //   li.insertAdjacentHTML("beforeend", `${element}</br>`);
+        // });
+        messages.appendChild(li);
+        messages.scrollTo(0, messages.scrollHeight);
+      });
+    </script>
+  </body>
+</html>
